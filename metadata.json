@@ -1,0 +1,10 @@
+{
+    "uuid": "window-on-top@yousafesaeed.github.io",
+    "name": "Window on Top",
+    "description": "Simple Always on Top button for the top panel.",
+    "version": 1,
+    "shell-version": [
+        "45"
+    ],
+    "url": "https://github.com/yousafesaeed/window-on-top"
+}
