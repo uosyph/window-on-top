@@ -33,19 +33,27 @@ export default class WindowOnTopExtension extends Extension {
         this._switchWorkspaceHandleId = global.window_manager.connectObject('switch-workspace',
             this._focusAppChanged.bind(this), this);
 
-        // Add the extension to the status area
+        // Add the extension to the top panel
         Main.panel.addToStatusArea(this.uuid, this._indicator, 2, 'left');
     }
 
     disable() {
         // Destroy icons and the PanelMenu button and disconnect event handlers
+        this._oldGlobalDisplayFocusWindow = null;
+
         this._aboveIcon?.destroy();
+        this._aboveIcon = null;
         this._belowIcon?.destroy();
+        this._belowIcon = null;
+
+        global.display.focus_window.disconnect(this._handlerId);
+        this._handlerId = null;
 
         global.window_manager.disconnectObject(this._switchWorkspaceHandleId);
         Shell.WindowTracker.get_default().disconnectObject(this._focusAppHandlerId);
 
         this._indicator?.destroy();
+        this._indicator = null;
     }
 
     // Event handler for focus app changes
