@@ -5,7 +5,7 @@ import St from 'gi://St';
 import Shell from 'gi://Shell';
 import Gio from 'gi://Gio';
 
-export default class ExampleExtension extends Extension {
+export default class WindowOnTopExtension extends Extension {
     constructor(ext) {
         super(ext);
         this._indicator = null;

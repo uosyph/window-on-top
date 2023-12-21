@@ -1,7 +1,7 @@
 {
     "uuid": "window-on-top@yousafesaeed.github.io",
     "name": "Window on Top",
-    "description": "Simple Always on Top button for the top panel.",
+    "description": "Simple top panel toggle for activating Always on Top for windows.",
     "version": 1,
     "shell-version": [
         "45"
