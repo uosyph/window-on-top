@@ -20,8 +20,8 @@ export default class WindowOnTopExtension extends Extension {
         this._indicator = new PanelMenu.Button(0.0, this.metadata.name, false);
         this._indicator.connect('button-press-event', this._buttonClicked.bind(this));
 
-        this._aboveIcon = this._createIcon(`${this.path}/icons/Above-symbolic.svg`);
-        this._belowIcon = this._createIcon(`${this.path}/icons/Under-symbolic.svg`);
+        this._aboveIcon = this._createIcon(`${this.path}/icons/OnTop-symbolic.svg`);
+        this._belowIcon = this._createIcon(`${this.path}/icons/Default-symbolic.svg`);
 
         // Initialize and update icons and connect event handlers for focus changes
         this._initializeIcons();
@@ -46,8 +46,10 @@ export default class WindowOnTopExtension extends Extension {
         this._belowIcon?.destroy();
         this._belowIcon = null;
 
-        global.display.focus_window.disconnect(this._handlerId);
-        this._handlerId = null;
+        if (global.display.focus_window && this._handlerId !== null) {
+            global.display.focus_window.disconnect(this._handlerId);
+            this._handlerId = null;
+        }
 
         global.window_manager.disconnectObject(this._switchWorkspaceHandleId);
         Shell.WindowTracker.get_default().disconnectObject(this._focusAppHandlerId);
