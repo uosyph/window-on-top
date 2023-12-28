@@ -9,42 +9,43 @@ export default class WindowOnTopExtension extends Extension {
     constructor(ext) {
         super(ext);
         this._indicator = null;
-        this._aboveIcon = null;
-        this._belowIcon = null;
+        this._topIcon = null;
+        this._defaultIcon = null;
         this._oldGlobalDisplayFocusWindow = null;
         this._handlerId = 0;
     }
 
     enable() {
-        // Create the PanelMenu button and icons for above and below states for the extension
+        // Create the PanelMenu button and icons for 'on top' and 'default' states
         this._indicator = new PanelMenu.Button(0.0, this.metadata.name, false);
         this._indicator.connect('button-press-event', this._buttonClicked.bind(this));
 
-        this._aboveIcon = this._createIcon(`${this.path}/icons/OnTop-symbolic.svg`);
-        this._belowIcon = this._createIcon(`${this.path}/icons/Default-symbolic.svg`);
+        this._topIcon = this._createIcon(`${this.path}/icons/top-symbolic.svg`);
+        this._defaultIcon = this._createIcon(`${this.path}/icons/default-symbolic.svg`);
 
-        // Initialize and update icons and connect event handlers for focus changes
+        // Initialize icons and update icon position, connect event handlers for focus changes
         this._initializeIcons();
         this._updateIconPosition();
 
+        // Connect focus change and workspace switch events
         this._focusAppHandlerId = Shell.WindowTracker.get_default().connectObject('notify::focus-app',
-            this._focusAppChanged.bind(this), this);
+            this._windowFocusChanged.bind(this), this);
 
         this._switchWorkspaceHandleId = global.window_manager.connectObject('switch-workspace',
-            this._focusAppChanged.bind(this), this);
+            this._windowFocusChanged.bind(this), this);
 
         // Add the extension to the top panel
         Main.panel.addToStatusArea(this.uuid, this._indicator, 2, 'left');
     }
 
     disable() {
-        // Destroy icons and the PanelMenu button and disconnect event handlers
+        // Clean up resources and disconnect event handlers
         this._oldGlobalDisplayFocusWindow = null;
 
-        this._aboveIcon?.destroy();
-        this._aboveIcon = null;
-        this._belowIcon?.destroy();
-        this._belowIcon = null;
+        this._topIcon?.destroy();
+        this._topIcon = null;
+        this._defaultIcon?.destroy();
+        this._defaultIcon = null;
 
         if (global.display.focus_window && this._handlerId !== null) {
             global.display.focus_window.disconnect(this._handlerId);
@@ -58,44 +59,44 @@ export default class WindowOnTopExtension extends Extension {
         this._indicator = null;
     }
 
-    // Event handler for focus app changes
-    _focusAppChanged() {
-        this._isWindowChange_Handler();
+    // Event handler for app focus changes
+    _windowFocusChanged() {
+        this._handleWindowChange();
         this._changeIcon();
     }
 
-    // Check if the window is above and update the icon
-    _isAboveFunction() {
+    // Check if the window is on top and update the icon
+    _isWindowOnTop() {
         this._changeIcon();
     }
 
     // Handle changes in the focused window
-    _isWindowChange_Handler() {
+    _handleWindowChange() {
         if (this._oldGlobalDisplayFocusWindow) {
             this._oldGlobalDisplayFocusWindow.disconnect(this._handlerId);
         }
-        this._newFocusedWindow();
+        this._trackFocusedWindow();
     }
 
-    // Get the newly focused window and connect to its 'above' property
-    _newFocusedWindow() {
+    // Get the newly focused window and connect to its 'on top' state
+    _trackFocusedWindow() {
         this._oldGlobalDisplayFocusWindow = global.display.focus_window ? global.display.focus_window : null;
-        this._handlerId = global.display.focus_window ? global.display.focus_window.connect('notify::above', this._isAboveFunction.bind(this)) : 0;
+        this._handlerId = global.display.focus_window ? global.display.focus_window.connect('notify::above', this._isWindowOnTop.bind(this)) : 0;
     }
 
-    // Change the icon based on the above state
+    // Change the icon based on the window state
     _changeIcon() {
         this._updateIconPosition();
     }
 
-    // Handle button click event to toggle 'above' state
+    // Handle button click event to toggle the window state
     _buttonClicked() {
         global.display.focus_window.is_above() ? global.display.focus_window.unmake_above() : global.display.focus_window.make_above();
     }
 
     // Initialize icons and make the extension invisible
     _initializeIcons() {
-        this._indicator.add_child(this._aboveIcon);
+        this._indicator.add_child(this._topIcon);
         this._indicator.visible = false;
     }
 
@@ -109,17 +110,17 @@ export default class WindowOnTopExtension extends Extension {
         });
     }
 
-    // Update the position of the icon based on the 'above' state
+    // Update the position of the icon based on the window state
     _updateIconPosition() {
         try {
             if (global.display.focus_window) {
                 this._indicator.visible = true;
                 if (global.display.focus_window.is_above()) {
-                    this._indicator.remove_child(this._belowIcon);
-                    this._indicator.add_child(this._aboveIcon);
+                    this._indicator.remove_child(this._defaultIcon);
+                    this._indicator.add_child(this._topIcon);
                 } else {
-                    this._indicator.remove_child(this._aboveIcon);
-                    this._indicator.add_child(this._belowIcon);
+                    this._indicator.remove_child(this._topIcon);
+                    this._indicator.add_child(this._defaultIcon);
                 }
             } else {
                 this._indicator.visible = false;
