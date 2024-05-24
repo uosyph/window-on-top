@@ -4,7 +4,8 @@
     "description": "Simple top panel toggle for activating Always on Top for windows.",
     "version": 3,
     "shell-version": [
-        "45"
+        "45",
+	"46"
     ],
     "url": "https://github.com/yousafesaeed/window-on-top"
 }
