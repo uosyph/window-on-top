@@ -1,6 +1,6 @@
 # Window on Top
 
-Window on Top is a Gnome extension providing a top panel toggle for activating "Always on Top" mode for windows.
+Window on Top is an extension for the GNOME desktop environment that provides a top panel toggle for activating the 'Always on Top' mode for windows.
 
 ## Installation
 
