@@ -10,7 +10,7 @@ One-click install via the official [Gnome Shell Extensions](https://extensions.g
 
 ### Manual Install
 
-- Download the [latest release](https://github.com/yousafesaeed/window-on-top/releases).
+- Download the [latest release](https://github.com/uosyph/window-on-top/releases).
 - Extract the downloaded file into the extensions directory `unzip window-on-top.zip -d ~/.local/share/gnome-shell/extensions/`.
-- Reload the Gnome Shell by pressing `ALT+F2` and entering `r`.
+- Reload the Gnome Shell by pressing `ALT+F2` and entering `r` (You have to logout and log back in, in case of using Wayland).
 - Activate the extension using the Extensions app or a similar extension management tool.

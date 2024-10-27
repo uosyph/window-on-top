@@ -1,11 +1,12 @@
 {
     "uuid": "window-on-top@yousafesaeed.github.io",
     "name": "Window on Top",
-    "description": "Simple top panel toggle for activating Always on Top for windows.",
-    "version": 3,
+    "description": "Simple top panel button for toggling Always on Top for windows.",
+    "version": 5,
     "shell-version": [
         "45",
-	"46"
+        "46",
+        "47"
     ],
-    "url": "https://github.com/yousafesaeed/window-on-top"
+    "url": "https://github.com/uosyph/window-on-top"
 }
