@@ -4,6 +4,7 @@ import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
 import St from 'gi://St';
 import Shell from 'gi://Shell';
 import Gio from 'gi://Gio';
+import Clutter from 'gi://Clutter';
 
 export default class WindowOnTopExtension extends Extension {
     constructor(ext) {
@@ -19,6 +20,7 @@ export default class WindowOnTopExtension extends Extension {
         // Create the PanelMenu button and icons for 'on top' and 'default' states
         this._indicator = new PanelMenu.Button(0.0, this.metadata.name, false);
         this._indicator.connect('button-press-event', this._buttonClicked.bind(this));
+        this._indicator.connect('captured-event', this._handleCapturedEvent.bind(this));  // Add captured event connection
 
         this._topIcon = this._createIcon(`${this.path}/icons/top-symbolic.svg`);
         this._defaultIcon = this._createIcon(`${this.path}/icons/default-symbolic.svg`);
@@ -92,6 +94,15 @@ export default class WindowOnTopExtension extends Extension {
     // Handle button click event to toggle the window state
     _buttonClicked() {
         global.display.focus_window.is_above() ? global.display.focus_window.unmake_above() : global.display.focus_window.make_above();
+    }
+
+    // Handle captured event to detect touch events
+    _handleCapturedEvent(actor, event) {
+        if (event.type() === Clutter.EventType.TOUCH_BEGIN) {
+            this._buttonClicked();
+            return Clutter.EVENT_STOP;
+        }
+        return Clutter.EVENT_PROPAGATE;
     }
 
     // Initialize icons and make the extension invisible
