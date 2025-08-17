@@ -3,6 +3,6 @@
     "name": "Window on Top",
     "description": "Simple top panel button for toggling Always on Top for windows.",
     "version": 6,
-    "shell-version": ["45", "46", "47"],
+    "shell-version": ["45", "46", "47", "48"],
     "url": "https://github.com/uosyph/window-on-top"
 }
