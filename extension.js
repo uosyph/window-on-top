@@ -22,6 +22,9 @@ export default class WindowOnTopExtension extends Extension {
         this._indicator.connect('button-press-event', this._buttonClicked.bind(this));
         this._indicator.connect('captured-event', this._handleCapturedEvent.bind(this));  // Add captured event connection
 
+        // Make sure button-press-event is propagated correctly on gnome 49 and 50        
+        this._indicator.clear_actions()
+        
         this._topIcon = this._createIcon(`${this.path}/icons/top-symbolic.svg`);
         this._defaultIcon = this._createIcon(`${this.path}/icons/default-symbolic.svg`);
 
